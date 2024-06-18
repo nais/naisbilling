@@ -1,0 +1,1 @@
+SELECT * FROM `nais-io.nais_billing_extended.breakdown_total_daily` where tenant in ('ci-nais', 'example', 'testing', 'dev-nais', 'nav', 'nais')

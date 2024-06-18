@@ -1,0 +1,27 @@
+SELECT 
+  project.name project_name,
+  project.id project_id,
+  (SELECT value from UNNEST(labels) WHERE key='team') as team_label,
+  (SELECT value from UNNEST(project.labels) WHERE key='team') as team,
+  (SELECT value from UNNEST(project.labels) WHERE key='environment') as env,
+  (SELECT value from UNNEST(project.labels) WHERE key='tenant') as tenant,
+  (SELECT value from UNNEST(labels) WHERE key='k8s-namespace') as k8s_namespace,
+  (SELECT value from UNNEST(labels) WHERE key='k8s-label/app') as k8s_app,
+  (SELECT value from UNNEST(labels) WHERE key='app') as app_label,
+  (SELECT value from UNNEST(labels) WHERE key='goog-k8s-cluster-name') as k8s_cluster,
+  service.description service_description,
+  sku.id sku_id,
+  sku.description sku_description,
+  usage_start_time,
+  usage_end_time,
+  usage.amount usage_amount,
+  usage.unit usage_unit,
+  usage.amount_in_pricing_units usage_amount_in_pricing_units,
+  usage.pricing_unit usage_pricing_unit,
+  cost,
+  cost_at_list,
+  price.effective_price price_effective_price,
+  -- OBS! Hvis det oppstår rader med mer enn en credit så vil vi velge kun den første (har aldri skjedd per 12.juni 24)
+  (select amount from unnest(credits)) as credits_amount,
+  (select type from unnest(credits)) as credits_type
+FROM `nais-io.nais_billing_regional.gcp_billing_export_resource_v1_014686_D32BB4_68DF8E`
