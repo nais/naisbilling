@@ -1,7 +1,7 @@
 --GCP utenom GKE og isoc checkpoints
 SELECT NULL AS cluster
       , project_name
-      , NULL as namespace --TODO: Tror vi kan finne namespace et sted
+      , NULL as namespace
       , env
       , team
       , tenant
@@ -64,6 +64,7 @@ UNION ALL
 -- Legacy billingdata fram til '2023-03-07'
 select * from `nais-io.legacy_billing.cost_breakdown_total_gcp_static`
 
+/*
 UNION ALL
 
 --Aiven
@@ -83,3 +84,4 @@ SELECT NULL as cluster
      , 'aiven' as source
      , 'Aiven' as vendor
 FROM `nais-io.nais_billing_regional.cost_breakdown_aiven`
+*/
