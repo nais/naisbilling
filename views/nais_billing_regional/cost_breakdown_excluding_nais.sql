@@ -3,8 +3,7 @@ SELECT b.project_name
         , b.env
         , IFNULL(b.team_label, b.team) as team
         , COALESCE(b.tenant, 'nav') as tenant
-        , app_label as app
-        -- TODO: cost_category er veldig ufullstendig
+        , b.app_label as app
         , CASE
             WHEN starts_with(b.team, 'nais') THEN 'Plattform'
             WHEN b.team in ('nada', 'knada-gcp', 'knada-dev') THEN 'Dataplattform'

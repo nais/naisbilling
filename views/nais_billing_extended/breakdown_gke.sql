@@ -12,7 +12,7 @@ SELECT b.project_name
         end as env
         , b.k8s_cluster as cluster
         , b.k8s_namespace as namespace
-        , case --TODO: håndtere knada-teams
+        , case
             when b.k8s_namespace in (select team from `nais_billing_regional.nais_teams`) and not starts_with(b.k8s_namespace, 'nais') then b.k8s_namespace
             when b.project_name in ('knada-gcp', 'knada-dev') then b.k8s_namespace
             else b.team 
