@@ -15,9 +15,6 @@ Dette datasettet er mest brukt. Det har en stor svakhet og det er at det ikke ta
 
 Ligner veldig på nais_billing_regional, men inkluderer ekstra felter med rabatter, priser og forbruk. Her tar vi høyde for cud-avtaler, men det hindrer oss fra å fordele disse kostnadene på team. Dette datasettet bør brukes dersom det er viktig med nøyaktige tall.
 
-# navbilling
-Bigquery views to break down billing on teams/apps.
-
 ## How to import manually created views to terraform
 In order to let terraform manage views that have been manually created in the google cloud console, you need to import them to the terraform state.
 This needs to be done locally and is not part of the github action.
