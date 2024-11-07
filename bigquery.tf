@@ -283,3 +283,15 @@ resource "google_bigquery_table" "regional_ssb" {
   }
 }
 
+resource "google_bigquery_table" "source_ssb" {
+  dataset_id  = google_bigquery_dataset.nais_billing_regional.dataset_id
+  table_id    = "source_ssb"
+  description = "The part of the source data that belongs to the ssb tenant"
+
+  view {
+    query          = file("views/nais_billing_regional/source_ssb.sql")
+    use_legacy_sql = false
+  }
+}
+
+
