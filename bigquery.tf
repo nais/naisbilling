@@ -19,6 +19,13 @@ resource "google_bigquery_dataset" "legacy_billing" {
   location = "europe-north1"
 }
 
+resource "google_bigquery_dataset" "tenant_billing" {
+  dataset_id = "tenant_billing"
+  friendly_name = "tenant_billing"
+  description = "Data for easy billing of tenants. Managed by terraform in nais/naisbilling"
+  location = "europe-north1"
+}
+
 resource "google_bigquery_table" "legacy_excluding_nais" {
   dataset_id  = google_bigquery_dataset.legacy_billing.dataset_id
   table_id    = "cost_breakdown_excluding_nais"
@@ -290,6 +297,17 @@ resource "google_bigquery_table" "source_ssb" {
 
   view {
     query          = file("views/nais_billing_regional/source_ssb.sql")
+    use_legacy_sql = false
+  }
+}
+
+resource "google_bigquery_table" "tenant_cost_by_invoice_month" {
+  dataset_id  = google_bigquery_dataset.tenant_billing.dataset_id
+  table_id    = "tenant_cost_by_invoice_month"
+  description = "Exact net cost for each tenant, grouped by invoice month. This is the data that should be used for billing tenants."
+
+  view {
+    query          = file("views/tenant_billing/tenant_cost_by_invoice_month.sql")
     use_legacy_sql = false
   }
 }
