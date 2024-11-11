@@ -40,6 +40,7 @@ SELECT
       'nais',
       'dev-nais',
       'ci-nais',
+      'test-nais',
       'example',
       'testing'
     ) then 'nav'
