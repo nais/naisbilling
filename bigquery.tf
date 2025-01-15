@@ -5,6 +5,13 @@ resource "google_bigquery_dataset" "nais_billing_regional" {
   location = "europe-north1"
 }
 
+resource "google_bigquery_dataset" "nais_billing_standard" {
+  dataset_id = "nais_billing_standard"
+  friendly_name = "nais_billing_standard"
+  description = "Standard billing export, as opposed to detailed billing export used in nais_billing_regional and nais_billing_extended. Managed by terraform in nais/naisbilling. "
+  location = "europe-north1"
+}
+
 resource "google_bigquery_dataset" "nais_billing_extended" {
   dataset_id = "nais_billing_extended"
   friendly_name = "nais_billing_extended"
@@ -312,4 +319,13 @@ resource "google_bigquery_table" "tenant_cost_by_invoice_month" {
   }
 }
 
+resource "google_bigquery_table" "standard_source_ssb" {
+  dataset_id  = google_bigquery_dataset.nais_billing_standard.dataset_id
+  table_id    = "source_ssb"
+  description = "SSB cost on the form of standard billing export."
 
+  view {
+    query          = file("views/nais_billing_standard/source_ssb.sql")
+    use_legacy_sql = false
+  }
+}
