@@ -27,7 +27,7 @@ FROM (
         _PARTITIONDATE as partition_date
     FROM
         `nais-io.nais_billing_standard.gcp_billing_export_v1_014686_D32BB4_68DF8E`
-    WHERE usage_start_time >= '2025-01-13'
+    WHERE usage_start_time > '2025-01-12 14:00:00' --Tidspunktet som gir best overlapp. Mister ca €0.4
     UNION ALL
     SELECT
         billing_account_id,
@@ -56,7 +56,7 @@ FROM (
     FROM
         `nais-io.nais_billing_standard.gcp_billing_export_v1_014686_D32BB4_68DF8E_copy`
     WHERE _PARTITIONDATE >= '2023-01-01' --Første kostnad for ssb var tidlig i 2023
-    AND usage_start_time < '2025-01-13'
+    AND usage_start_time <= '2025-01-12 14:00:00'
 
 )
 WHERE
