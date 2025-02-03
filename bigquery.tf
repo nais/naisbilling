@@ -176,6 +176,17 @@ resource "google_bigquery_table" "extended_mtpilot" {
   }
 }
 
+resource "google_bigquery_table" "extended_ldir" {
+  dataset_id  = google_bigquery_dataset.nais_billing_extended.dataset_id
+  table_id    = "tenant_ldir"
+  description = "Total costs for ldir tenant"
+
+  view {
+    query          = file("views/nais_billing_extended/tenant_ldir.sql")
+    use_legacy_sql = false
+  }
+}
+
 resource "google_bigquery_table" "regional_aiven" {
   dataset_id  = google_bigquery_dataset.nais_billing_regional.dataset_id
   table_id    = "cost_breakdown_aiven"
@@ -297,6 +308,17 @@ resource "google_bigquery_table" "regional_ssb" {
   }
 }
 
+resource "google_bigquery_table" "regional_ldir" {
+  dataset_id  = google_bigquery_dataset.nais_billing_regional.dataset_id
+  table_id    = "tenant_ldir"
+  description = "The parts of the cost breakdown that belong to the ldir tenant"
+
+  view {
+    query          = file("views/nais_billing_regional/tenant_ldir.sql")
+    use_legacy_sql = false
+  }
+}
+
 resource "google_bigquery_table" "source_ssb" {
   dataset_id  = google_bigquery_dataset.nais_billing_regional.dataset_id
   table_id    = "source_ssb"
@@ -326,6 +348,17 @@ resource "google_bigquery_table" "standard_source_ssb" {
 
   view {
     query          = file("views/nais_billing_standard/source_ssb.sql")
+    use_legacy_sql = false
+  }
+}
+
+resource "google_bigquery_table" "standard_source_ldir" {
+  dataset_id  = google_bigquery_dataset.nais_billing_standard.dataset_id
+  table_id    = "source_ldir"
+  description = "Landbruksdirektoratet cost on the form of standard billing export."
+
+  view {
+    query          = file("views/nais_billing_standard/source_ldir.sql")
     use_legacy_sql = false
   }
 }
