@@ -319,6 +319,17 @@ resource "google_bigquery_table" "regional_ldir" {
   }
 }
 
+resource "google_bigquery_table" "source_nav" {
+  dataset_id  = google_bigquery_dataset.nais_billing_regional.dataset_id
+  table_id    = "source_nav"
+  description = "The part of the source data that belongs to the nav tenant"
+
+  view {
+    query          = file("views/nais_billing_regional/source_nav.sql")
+    use_legacy_sql = false
+  }
+}
+
 resource "google_bigquery_table" "source_ssb" {
   dataset_id  = google_bigquery_dataset.nais_billing_regional.dataset_id
   table_id    = "source_ssb"
