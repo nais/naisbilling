@@ -13,11 +13,11 @@ SELECT dates.dato as dato,
        c.date as month,
        service as service_description,
        service as sku_id,
-       case 
+       case
         when extract(month from dates.dato) = extract(month from current_date()) and extract(year from dates.dato) = extract(year from current_date()) then
-          sum(cast(cast(cost as float64) * 1000000 as int64) * cast(cast(r.usdeur as float64) * 1000000 as int64) / extract(day from current_date())) / (1000000 * 1000000)
+          sum(cast(cost as numeric) * cast(r.usdeur as numeric) / extract(day from current_date()))
         else
-          sum(cast(cast(cost as float64) * 1000000 as int64) * cast(cast(r.usdeur as float64) * 1000000 as int64) / cast(number_of_days as float64)) / (1000000 * 1000000)
+          sum(cast(cost as numeric) * cast(r.usdeur as numeric) / number_of_days)
         end as calculated_cost
 FROM `nais-io.aiven_cost_regional.cost_items` c
 right outer join dates on substring(string(dates.dato), 0, 7) = c.date
