@@ -19,7 +19,11 @@ SELECT dates.dato as dato,
         else
           sum(cast(cost as numeric) * cast(r.usdeur as numeric) / number_of_days)
         end as calculated_cost
-FROM `nais-io.aiven_cost_regional.cost_items` c
-right outer join dates on substring(string(dates.dato), 0, 7) = c.date
-inner join `aiven_cost_regional.currency_rates` r on string(dates.dato) = r.date
+FROM
+   (select date, environment, team, tenant, service, cost, number_of_days from `nais-io.aiven_cost_regional.cost_items` WHERE service != 'kafka'
+   union all
+   select date, environment, team, tenant, service, cost, number_of_days from `nais-io.aiven_cost_regional.kafka_cost`)
+ as c
+ right outer join dates on substring(string(dates.dato), 0, 7) = c.date
+ inner join `aiven_cost_regional.currency_rates` r on string(dates.dato) = r.date
 GROUP BY month, dato, team, environment, service, tenant
