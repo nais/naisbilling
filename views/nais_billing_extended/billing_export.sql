@@ -21,7 +21,7 @@ SELECT
   cost,
   cost_at_list,
   price.effective_price price_effective_price,
-  -- OBS! Hvis det oppstår rader med mer enn en credit så vil vi velge kun den første (har aldri skjedd per 12.juni 24)
-  (select amount from unnest(credits)) as credits_amount,
-  (select type from unnest(credits)) as credits_type
+  -- OBS! For rader med mer enn en type credit vil disse summeres og få credits_type "type1, type2"
+  (SELECT SUM(amount) FROM UNNEST(credits)) as credits_amount,
+  (SELECT STRING_AGG(DISTINCT type, ', ') FROM UNNEST(credits)) as credits_type
 FROM `nais-io.nais_billing_regional.gcp_billing_export_resource_v1_014686_D32BB4_68DF8E`
