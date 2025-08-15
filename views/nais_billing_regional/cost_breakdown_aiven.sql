@@ -1,29 +1,101 @@
-with dates as (
-  select dato from
-  UNNEST(
-    GENERATE_DATE_ARRAY(DATE((select CONCAT(min(date), '-01') from `nais-io.aiven_cost_regional.cost_items`)), CURRENT_DATE(), INTERVAL 1 DAY)
-) as dato)
-
-SELECT dates.dato as dato,
-       'aiven' AS project_name,
-       environment as env,
-       team,
-       tenant,
-       CASE WHEN team='nais' THEN 'Plattform' ELSE 'Produktteam' END as cost_category,
-       c.date as month,
-       service as service_description,
-       service as sku_id,
-       case
-        when extract(month from dates.dato) = extract(month from current_date()) and extract(year from dates.dato) = extract(year from current_date()) then
-          sum(cast(cost as numeric) * cast(r.usdeur as numeric) / extract(day from current_date()))
-        else
-          sum(cast(cost as numeric) * cast(r.usdeur as numeric) / number_of_days)
-        end as calculated_cost
+WITH
+  dates AS (
+    SELECT
+      dato
+    FROM
+      UNNEST (
+        GENERATE_DATE_ARRAY(
+          DATE(
+            (
+              SELECT
+                CONCAT(MIN(DATE), '-01')
+              FROM
+                `nais-io.aiven_cost_regional.cost_items`
+            )
+          ),
+          CURRENT_DATE(),
+          INTERVAL 1 DAY
+        )
+      ) AS dato
+  )
+SELECT
+  dates.dato AS dato,
+  'aiven' AS project_name,
+  environment AS env,
+  team,
+  tenant,
+  CASE
+    WHEN team = 'nais' THEN 'Plattform'
+    ELSE 'Produktteam'
+  END AS cost_category,
+  c.date AS MONTH,
+  service AS service_description,
+  service AS sku_id,
+  service_name,
+  CASE
+    WHEN EXTRACT(
+      MONTH
+      FROM
+        dates.dato
+    ) = EXTRACT(
+      MONTH
+      FROM
+        CURRENT_DATE()
+    )
+    AND EXTRACT(
+      YEAR
+      FROM
+        dates.dato
+    ) = EXTRACT(
+      YEAR
+      FROM
+        CURRENT_DATE()
+    ) THEN SUM(
+      CAST(cost AS NUMERIC) * CAST(r.usdeur AS NUMERIC) / EXTRACT(
+        DAY
+        FROM
+          CURRENT_DATE()
+      )
+    )
+    ELSE SUM(
+      CAST(cost AS NUMERIC) * CAST(r.usdeur AS NUMERIC) / number_of_days
+    )
+  END AS calculated_cost
 FROM
-   (select date, environment, team, tenant, service, cost, number_of_days from `nais-io.aiven_cost_regional.cost_items` WHERE service != 'kafka'
-   union all
-   select date, environment, team, tenant, service, cost, number_of_days from `nais-io.aiven_cost_regional.kafka_cost`)
- as c
- right outer join dates on substring(string(dates.dato), 0, 7) = c.date
- inner join `aiven_cost_regional.currency_rates` r on string(dates.dato) = r.date
-GROUP BY month, dato, team, environment, service, tenant
+  (
+    SELECT
+      DATE,
+      environment,
+      team,
+      tenant,
+      service,
+      service_name,
+      cost,
+      number_of_days
+    FROM
+      `nais-io.aiven_cost_regional.cost_items`
+    WHERE
+      service != 'kafka'
+    UNION ALL
+    SELECT
+      DATE,
+      environment,
+      team,
+      tenant,
+      service,
+      service_name,
+      cost,
+      number_of_days
+    FROM
+      `nais-io.aiven_cost_regional.kafka_cost`
+  ) AS c
+  RIGHT OUTER JOIN dates ON SUBSTRING(STRING(dates.dato), 0, 7) = c.date
+  INNER JOIN `aiven_cost_regional.currency_rates` r ON STRING(dates.dato) = r.date
+GROUP BY
+  MONTH,
+  dato,
+  team,
+  environment,
+  service,
+  service_name,
+  tenant
