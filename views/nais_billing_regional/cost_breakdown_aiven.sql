@@ -28,7 +28,7 @@ SELECT
     WHEN team = 'nais' THEN 'Plattform'
     ELSE 'Produktteam'
   END AS cost_category,
-  c.date AS MONTH,
+  c.date AS month,
   service AS service_description,
   service AS sku_id,
   service_name,
@@ -92,7 +92,7 @@ FROM
   RIGHT OUTER JOIN dates ON SUBSTRING(STRING(dates.dato), 0, 7) = c.date
   INNER JOIN `aiven_cost_regional.currency_rates` r ON STRING(dates.dato) = r.date
 GROUP BY
-  MONTH,
+  month,
   dato,
   team,
   environment,
