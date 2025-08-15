@@ -12,6 +12,7 @@ SELECT
   service.description service_description,
   sku.id sku_id,
   sku.description sku_description,
+  resource.global_name resource_name,
   usage_start_time,
   usage_end_time,
   usage.amount usage_amount,
