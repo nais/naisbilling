@@ -33,6 +33,13 @@ resource "google_bigquery_dataset" "tenant_billing" {
   location = "europe-north1"
 }
 
+resource "google_bigquery_dataset" "focus_billing" {
+  dataset_id = "focus_billing"
+  friendly_name = "focus_billing"
+  description = "Billing data on FOCUS format. Managed by terraform in nais/naisbilling"
+  location = "EU"
+}
+
 resource "google_bigquery_table" "legacy_excluding_nais" {
   dataset_id  = google_bigquery_dataset.legacy_billing.dataset_id
   table_id    = "cost_breakdown_excluding_nais"
@@ -370,6 +377,17 @@ resource "google_bigquery_table" "standard_source_ldir" {
 
   view {
     query          = file("views/nais_billing_standard/source_ldir.sql")
+    use_legacy_sql = false
+  }
+}
+
+resource "google_bigquery_table" "focus_billing" {
+  dataset_id  = google_bigquery_dataset.focus_billing.dataset_id
+  table_id    = "focus_v1_nav"
+  description = "Billing data on FOCUS format for nav tenant"
+
+  view {
+    query          = file("views/focus_billing/focus_v1_nav.sql")
     use_legacy_sql = false
   }
 }
