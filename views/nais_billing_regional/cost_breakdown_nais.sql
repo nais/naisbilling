@@ -13,6 +13,7 @@ SELECT
     k8s_cluster AS cluster,
     k8s_namespace AS namespace,
     CASE
+        WHEN k8s_namespace = 'kube-system' THEN team -- kube-system finnes i nais_teams_history
         WHEN k8s_namespace IN (
             SELECT
                 team
@@ -20,11 +21,7 @@ SELECT
                 `nais_billing_regional.nais_teams_history`
         )
         AND NOT STARTS_WITH(k8s_namespace, 'nais') THEN k8s_namespace
-        WHEN project_name IN ('knada-gcp', 'knada-dev') THEN CASE
-            WHEN STARTS_WITH(k8s_namespace, 'kube:')
-            OR STARTS_WITH(k8s_namespace, 'goog-') THEN 'knada'
-            ELSE k8s_namespace
-        END
+        WHEN project_name IN ('knada-gcp', 'knada-dev') AND STARTS_WITH(k8s_namespace, 'team-') THEN k8s_namespace
         ELSE team
     END AS team,
     COALESCE(tenant, 'nav') AS tenant,
