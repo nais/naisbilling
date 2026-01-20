@@ -13,7 +13,7 @@ SELECT b.project_name
         , b.k8s_cluster as cluster
         , b.k8s_namespace as namespace
         , case
-            when b.k8s_namespace in (select team from `nais_billing_regional.nais_teams`) and not starts_with(b.k8s_namespace, 'nais') then b.k8s_namespace
+            when b.k8s_namespace in (select team from `nais_billing_regional.nais_teams_history`) and not starts_with(b.k8s_namespace, 'nais') then b.k8s_namespace
             when b.project_name in ('knada-gcp', 'knada-dev') then b.k8s_namespace
             else b.team 
         end as team
@@ -21,7 +21,7 @@ SELECT b.project_name
         , COALESCE(b.k8s_app, app_label) as app
         -- cost_category vil ikke fordele GKE-kostnader hvis vi bare baserer på b.team
         , CASE
-            WHEN b.k8s_namespace in (select distinct team from `nais_billing_regional.nais_teams`) and not starts_with(b.k8s_namespace, 'nais') THEN 'Produktteam'
+            WHEN b.k8s_namespace in (select distinct team from `nais_billing_regional.nais_teams_history`) and not starts_with(b.k8s_namespace, 'nais') THEN 'Produktteam'
             WHEN starts_with(b.team, 'nais') THEN 'Plattform'
             WHEN b.team in ('nada', 'dataplattform') THEN 'Dataplattform'
             WHEN b.team = 'isoc' THEN 'ISOC/SecOps'

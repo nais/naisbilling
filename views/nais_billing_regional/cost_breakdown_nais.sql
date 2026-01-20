@@ -17,7 +17,7 @@ SELECT
             SELECT
                 team
             FROM
-                `nais_billing_regional.nais_teams`
+                `nais_billing_regional.nais_teams_history`
         )
         AND NOT STARTS_WITH(k8s_namespace, 'nais') THEN k8s_namespace
         WHEN project_name IN ('knada-gcp', 'knada-dev') THEN CASE
@@ -35,7 +35,7 @@ SELECT
             SELECT
                 team
             FROM
-                `nais_billing_regional.nais_teams`
+                `nais_billing_regional.nais_teams_history`
         )
         AND NOT STARTS_WITH(k8s_namespace, 'nais') THEN 'Produktteam'
         WHEN STARTS_WITH(team, 'nais') THEN 'Plattform'

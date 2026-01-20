@@ -260,17 +260,6 @@ resource "google_bigquery_table" "regional_export" {
   }
 }
 
-resource "google_bigquery_table" "regional_teams" {
-  dataset_id  = google_bigquery_dataset.nais_billing_regional.dataset_id
-  table_id    = "nais_teams"
-  description = "List of all teams and tenants that were ever billed in gcp"
-
-  view {
-    query          = file("views/nais_billing_regional/nais_teams.sql")
-    use_legacy_sql = false
-  }
-}
-
 resource "google_bigquery_table" "regional_fhi" {
   dataset_id  = google_bigquery_dataset.nais_billing_regional.dataset_id
   table_id    = "tenant_fhi"
