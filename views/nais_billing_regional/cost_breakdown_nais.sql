@@ -47,7 +47,7 @@ SELECT
         ) THEN 'Produktteam'
         ELSE 'Annet'
     END AS cost_category,
-    DATE(usage_start_time) AS dato,
+    DATE(usage_start_time, 'Europe/Oslo') AS dato,
     service_description,
     sku_id,
     sku_description,
@@ -68,7 +68,8 @@ SELECT
                 0
             )
         )
-    ) AS calculated_cost
+    ) AS calculated_cost,
+    partition_date
 FROM
     `nais-io.nais_billing_regional.gcp_billing_export`
 WHERE
@@ -93,4 +94,5 @@ GROUP BY
     app,
     cost_category,
     namespace,
-    cluster
+    cluster,
+    partition_date

@@ -18,5 +18,6 @@ SELECT
   usage.amount AS usage_amount,
   usage.unit AS usage_unit,
   cost,
-  credits
+  credits,
+  _PARTITIONDATE AS partition_date
 FROM `nais-io.nais_billing_regional.gcp_billing_export_resource_v1_014686_D32BB4_68DF8E`
