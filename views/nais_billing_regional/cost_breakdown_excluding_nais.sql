@@ -47,6 +47,7 @@ FROM
 WHERE
     k8s_namespace IS NULL -- Betyr at det ikke er en GKE-kostnad
     -- CUD som ikke fordeles på team. Inkluderes ved å ikke trekke fra CUD-credits i stedet
+    -- Dette gjelder resource based CUDs og den gamle versjonen av spend based CUDs (før februar 2026)
     AND sku_id NOT IN (
         '08CF-4B12-9DDF',
         'F61D-4D51-AAFC',
