@@ -23,7 +23,7 @@ resource "google_bigquery_data_transfer_config" "extended_daily_cost_update" {
     destination_table_name_template = "breakdown_total_daily"
     partitioning_field              = "dato"
     write_disposition               = "WRITE_TRUNCATE"
-    query                           = "SELECT * FROM `nais-io.nais_billing_extended.breakdown_total`"
+    query                           = file("scheduled_queries/extended_daily_cost_update.sql")
   }
 }
 
@@ -42,7 +42,7 @@ resource "google_bigquery_data_transfer_config" "regional_daily_cost_update" {
     destination_table_name_template = "cost_breakdown_total_daily_update"
     partitioning_field              = "dato"
     write_disposition               = "WRITE_TRUNCATE"
-    query                           = "SELECT * FROM `nais-io.nais_billing_regional.cost_breakdown_total`"
+    query                           = file("scheduled_queries/regional_daily_cost_update.sql")
   }
 }
 
@@ -60,6 +60,22 @@ resource "google_bigquery_data_transfer_config" "tenant_monthly" {
   params = {
     destination_table_name_template = "monthly_tenant_billing"
     write_disposition               = "WRITE_TRUNCATE"
-    query                           = "SELECT * FROM `nais-io.tenant_billing.tenant_cost_by_invoice_month`"
+    query                           = file("scheduled_queries/tenant_monthly.sql")
+  }
+}
+
+resource "google_bigquery_data_transfer_config" "nais_teams_daily_update" {
+  location                  = "europe-north1"
+  data_source_id            = "scheduled_query"
+  display_name              = "Daily update of nais_teams_history"
+  destination_dataset_id    = google_bigquery_dataset.nais_billing_regional.dataset_id
+  schedule                  = "every day 03:00"
+  service_account_name      = "nais-io-bigquery-schedule-user@nais-io.iam.gserviceaccount.com"
+  email_preferences {
+    enable_failure_email = true
+  }
+
+  params = {
+    query = file("scheduled_queries/nais_teams_daily_update.sql")
   }
 }

@@ -1,0 +1,1 @@
+SELECT * FROM `nais-io.tenant_billing.tenant_cost_by_invoice_month`
