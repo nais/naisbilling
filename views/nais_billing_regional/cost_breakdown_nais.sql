@@ -22,7 +22,7 @@ SELECT
         )
         AND NOT STARTS_WITH(k8s_namespace, 'nais') THEN k8s_namespace
         WHEN project_name IN ('knada-gcp', 'knada-dev') AND STARTS_WITH(k8s_namespace, 'team-') THEN k8s_namespace
-        ELSE team
+        ELSE COALESCE(team, 'nais')
     END AS team,
     COALESCE(tenant, 'nav') AS tenant,
     COALESCE(k8s_app, app_label) AS app,

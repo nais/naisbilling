@@ -2,7 +2,7 @@ SELECT
     project_name,
     project_id,
     env,
-    IFNULL(team_label, team) AS team,
+    COALESCE(team_label, team, 'nais') AS team,
     COALESCE(tenant, 'nav') AS tenant,
     app_label AS app,
     CASE
