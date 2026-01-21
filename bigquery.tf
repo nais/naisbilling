@@ -8,14 +8,7 @@ resource "google_bigquery_dataset" "nais_billing_regional" {
 resource "google_bigquery_dataset" "nais_billing_standard" {
   dataset_id = "nais_billing_standard"
   friendly_name = "nais_billing_standard"
-  description = "Standard billing export, as opposed to detailed billing export used in nais_billing_regional and nais_billing_extended. Managed by terraform in nais/naisbilling. "
-  location = "europe-north1"
-}
-
-resource "google_bigquery_dataset" "nais_billing_extended" {
-  dataset_id = "nais_billing_extended"
-  friendly_name = "nais_billing_extended"
-  description = "The main difference between this dataset and nais_billing_regional is the additional fields regarding usage, price, cost and credits. It does also not contain data from before March 7th 2023. Managed by terraform in nais/naisbilling. "
+  description = "Standard billing export, as opposed to detailed billing export used in nais_billing_regional. Managed by terraform in nais/naisbilling. "
   location = "europe-north1"
 }
 
@@ -91,105 +84,6 @@ resource "google_bigquery_table" "legacy_projects" {
 
   view {
     query          = file("views/legacy_billing/gcp_projects_derived.sql")
-    use_legacy_sql = false
-  }
-}
-
-resource "google_bigquery_table" "extended_export" {
-  dataset_id  = google_bigquery_dataset.nais_billing_extended.dataset_id
-  table_id    = "billing_export"
-  description = "Unnests repeated fields from the billing export"
-
-  view {
-    query          = file("views/nais_billing_extended/billing_export.sql")
-    use_legacy_sql = false
-  }
-}
-
-resource "google_bigquery_table" "extended_excluding_gke" {
-  dataset_id  = google_bigquery_dataset.nais_billing_extended.dataset_id
-  table_id    = "breakdown_excluding_gke"
-  description = "Breaks down all costs not related to gke"
-
-  view {
-    query          = file("views/nais_billing_extended/breakdown_excluding_gke.sql")
-    use_legacy_sql = false
-  }
-}
-
-resource "google_bigquery_table" "extended_gke" {
-  dataset_id  = google_bigquery_dataset.nais_billing_extended.dataset_id
-  table_id    = "breakdown_gke"
-  description = "Breaks down all costs related to gke"
-
-  view {
-    query          = file("views/nais_billing_extended/breakdown_gke.sql")
-    use_legacy_sql = false
-  }
-}
-
-resource "google_bigquery_table" "extended_total" {
-  dataset_id  = google_bigquery_dataset.nais_billing_extended.dataset_id
-  table_id    = "breakdown_total"
-  description = "Combines costs from breakdown_gke, breakdown_excluding_gke and google marketplace (from nais-analyse project)"
-
-  view {
-    query          = file("views/nais_billing_extended/breakdown_total.sql")
-    use_legacy_sql = false
-  }
-}
-
-resource "google_bigquery_table" "extended_nav" {
-  dataset_id  = google_bigquery_dataset.nais_billing_extended.dataset_id
-  table_id    = "tenant_nav"
-  description = "Total costs for nav tenant + nais"
-
-  view {
-    query          = file("views/nais_billing_extended/tenant_nav.sql")
-    use_legacy_sql = false
-  }
-}
-
-resource "google_bigquery_table" "extended_fhi" {
-  dataset_id  = google_bigquery_dataset.nais_billing_extended.dataset_id
-  table_id    = "tenant_fhi"
-  description = "Total costs for fhi tenant"
-
-  view {
-    query          = file("views/nais_billing_extended/tenant_fhi.sql")
-    use_legacy_sql = false
-  }
-}
-
-resource "google_bigquery_table" "extended_ssb" {
-  dataset_id  = google_bigquery_dataset.nais_billing_extended.dataset_id
-  table_id    = "tenant_ssb"
-  description = "Total costs for ssb tenant"
-
-  view {
-    query          = file("views/nais_billing_extended/tenant_ssb.sql")
-    use_legacy_sql = false
-  }
-}
-
-resource "google_bigquery_table" "extended_mtpilot" {
-  dataset_id  = google_bigquery_dataset.nais_billing_extended.dataset_id
-  table_id    = "tenant_mtpilot"
-  description = "Total costs for mtpilot tenant"
-
-  view {
-    query          = file("views/nais_billing_extended/tenant_mtpilot.sql")
-    use_legacy_sql = false
-  }
-}
-
-resource "google_bigquery_table" "extended_ldir" {
-  dataset_id  = google_bigquery_dataset.nais_billing_extended.dataset_id
-  table_id    = "tenant_ldir"
-  description = "Total costs for ldir tenant"
-
-  view {
-    query          = file("views/nais_billing_extended/tenant_ldir.sql")
     use_legacy_sql = false
   }
 }
