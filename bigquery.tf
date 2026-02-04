@@ -242,6 +242,17 @@ resource "google_bigquery_table" "tenant_cost_by_invoice_month" {
   }
 }
 
+resource "google_bigquery_table" "standard_source_nav" {
+  dataset_id  = google_bigquery_dataset.nais_billing_standard.dataset_id
+  table_id    = "source_nav"
+  description = "NAV cost on the form of standard billing export."
+
+  view {
+    query          = file("views/nais_billing_standard/source_nav.sql")
+    use_legacy_sql = false
+  }
+}
+
 resource "google_bigquery_table" "standard_source_ssb" {
   dataset_id  = google_bigquery_dataset.nais_billing_standard.dataset_id
   table_id    = "source_ssb"
