@@ -10,10 +10,26 @@ resource "google_bigquery_data_transfer_config" "regional_daily_cost_update" {
   }
 
   params = {
+    query = file("scheduled_queries/regional_daily_cost_update.sql")
+  }
+}
+
+resource "google_bigquery_data_transfer_config" "regional_monthly_cost_update" {
+  location                  = "europe-north1"
+  data_source_id            = "scheduled_query"
+  display_name              = "Monthly full refresh of regional cost_breakdown_total"
+  destination_dataset_id    = google_bigquery_dataset.nais_billing_regional.dataset_id
+  schedule                  = "1 of month 03:00"
+  service_account_name      = "nais-io-bigquery-schedule-user@nais-io.iam.gserviceaccount.com"
+  email_preferences {
+    enable_failure_email = true
+  }
+
+  params = {
     destination_table_name_template = "cost_breakdown_total_daily_update"
     partitioning_field              = "dato"
     write_disposition               = "WRITE_TRUNCATE"
-    query                           = file("scheduled_queries/regional_daily_cost_update.sql")
+    query                           = file("scheduled_queries/regional_monthly_cost_update.sql")
   }
 }
 
