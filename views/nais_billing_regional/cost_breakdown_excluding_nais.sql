@@ -6,9 +6,9 @@ SELECT
     COALESCE(tenant, 'nav') AS tenant,
     app_label AS app,
     CASE
-        WHEN STARTS_WITH(team, 'nais') THEN 'Plattform'
-        WHEN team IN ('nada', 'knada-gcp', 'knada-dev') THEN 'Dataplattform'
-        WHEN team = 'isoc' THEN 'ISOC/SecOps'
+        WHEN STARTS_WITH(COALESCE(team_label, team, 'nais'), 'nais') THEN 'Plattform'
+        WHEN COALESCE(team_label, team, 'nais') IN ('nada', 'knada-gcp', 'knada-dev') THEN 'Dataplattform'
+        WHEN COALESCE(team_label, team, 'nais') = 'isoc' THEN 'ISOC/SecOps'
         WHEN (
             project_name LIKE '%-dev'
             OR project_name LIKE '%-prod'

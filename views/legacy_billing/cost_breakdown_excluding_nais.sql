@@ -11,7 +11,7 @@
                WHEN (b.project_name LIKE '%-dev' OR b.project_name LIKE '%-prod') THEN 'Produktteam'
                ELSE 'Annet'
         END AS cost_category
-         , DATE(b.usage_start_time) AS dato
+         , DATE(b.usage_start_time, 'Europe/Oslo') AS dato
          , b.service_description
          , b.sku_id
          , b.sku_description
@@ -29,7 +29,7 @@
                        ON b.project_id = p.project_id
 
     WHERE (b.project_id NOT IN ('nais-dev-2e7b', 'nais-labs-ebde', 'nais-prod-020f')
-        OR b.project_name IS NULL)
+        OR b.project_id IS NULL)
         -- CUD som ikke fordeles på team. Inkluderes ved å ikke trekke fra CUD-credits i stedet
         AND b.sku_id NOT IN ('08CF-4B12-9DDF', 'F61D-4D51-AAFC')
 

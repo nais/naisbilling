@@ -35,9 +35,9 @@ SELECT
                 `nais_billing_regional.nais_teams_history`
         )
         AND NOT STARTS_WITH(k8s_namespace, 'nais') THEN 'Produktteam'
-        WHEN STARTS_WITH(team, 'nais') THEN 'Plattform'
-        WHEN team IN ('nada', 'dataplattform') THEN 'Dataplattform'
-        WHEN team = 'isoc' THEN 'ISOC/SecOps'
+        WHEN STARTS_WITH(COALESCE(team, 'nais'), 'nais') THEN 'Plattform'
+        WHEN COALESCE(team, 'nais') IN ('nada', 'dataplattform') THEN 'Dataplattform'
+        WHEN COALESCE(team, 'nais') = 'isoc' THEN 'ISOC/SecOps'
         WHEN (
             project_name LIKE '%-dev'
             OR project_name LIKE '%-prod'

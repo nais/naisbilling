@@ -16,6 +16,13 @@ WHERE
         'dev-nais-io',
         'nais.io',
         'test-nais.io',
-        'ci-nais.io',
-        NULL
+        'ci-nais.io'
     )
+    OR (
+        SELECT
+            a.displayname
+        FROM
+            UNNEST (x_project.ancestors) a
+        WHERE
+            STARTS_WITH(a.resourcename, "organizations")
+    ) IS NULL

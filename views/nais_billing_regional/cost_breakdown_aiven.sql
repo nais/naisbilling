@@ -90,7 +90,7 @@ FROM
       `nais-io.aiven_cost_regional.kafka_cost`
   ) AS c
   RIGHT OUTER JOIN dates ON SUBSTRING(STRING(dates.dato), 0, 7) = c.date
-  INNER JOIN `aiven_cost_regional.currency_rates` r ON STRING(dates.dato) = r.date
+  LEFT JOIN `aiven_cost_regional.currency_rates` r ON STRING(dates.dato) = r.date
 GROUP BY
   month,
   dato,

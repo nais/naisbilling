@@ -57,7 +57,7 @@
                   , sku_id
                   , sku_description
                   , service_description
-                  , DATE(usage_start_time, 'US/Pacific') AS dato
+                  , DATE(usage_start_time, 'Europe/Oslo') AS dato
                   , (SUM(CAST(cost * 1000000 AS int64)) + SUM(IFNULL((
                                                                          SELECT
                                                                              SUM(IF(c.type != 'COMMITTED_USAGE_DISCOUNT_DOLLAR_BASE', CAST(c.amount * 1000000 AS int64), 0))

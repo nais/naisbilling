@@ -93,3 +93,4 @@ SELECT
       vendor
 FROM
       `nais-io.legacy_billing.cost_breakdown_total_gcp_static`
+-- Alle data i denne tabellen er før cutover, så ingen filter nødvendig

@@ -26,6 +26,7 @@ WITH
             _PARTITIONDATE AS partition_date
         FROM
             `nais-io.nais_billing_standard.gcp_billing_export_v1_014686_D32BB4_68DF8E`
+        WHERE usage_start_time > '2025-01-12 14:00:00' -- Cutover point; data before this is in _copy
         UNION ALL
         SELECT
             billing_account_id,
@@ -53,6 +54,7 @@ WITH
             _PARTITIONDATE AS partition_date
         FROM
             `nais-io.nais_billing_standard.gcp_billing_export_v1_014686_D32BB4_68DF8E_copy`
+        WHERE usage_start_time <= '2025-01-12 14:00:00'
     )
 SELECT
     *
