@@ -1,9 +1,8 @@
 resource "google_bigquery_data_transfer_config" "regional_daily_cost_update" {
-  location                  = "europe-north1"
-  data_source_id            = "scheduled_query"
-  display_name              = "Daily update for regional cost_breakdown_total"
-  destination_dataset_id    = google_bigquery_dataset.nais_billing_regional.dataset_id
-  schedule                  = "every day 05:30"
+  location               = "europe-north1"
+  data_source_id         = "scheduled_query"
+  display_name           = "Daily update for regional cost_breakdown_total"
+  schedule               = "every day 05:30"
   service_account_name      = "nais-io-bigquery-schedule-user@nais-io.iam.gserviceaccount.com"
   email_preferences {
     enable_failure_email = true
