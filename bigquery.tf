@@ -110,6 +110,18 @@ resource "google_bigquery_table" "regional_aiven_nav" {
   }
 }
 
+resource "google_bigquery_table" "aiven_cost_breakdown_daily" {
+  dataset_id  = "aiven_cost_regional"
+  table_id    = "cost_breakdown_aiven_daily"
+  description = "Aiven cost extrapolated to daily from monthly cost"
+
+  view {
+    query          = file("views/aiven_cost_regional/cost_breakdown_aiven_daily.sql")
+    use_legacy_sql = false
+  }
+}
+
+
 resource "google_bigquery_table" "regional_excluding_nais" {
   dataset_id  = google_bigquery_dataset.nais_billing_regional.dataset_id
   table_id    = "cost_breakdown_excluding_nais"

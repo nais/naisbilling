@@ -1,1 +1,1 @@
-SELECT * FROM `nais-io.nais_billing_regional.cost_breakdown_aiven` where tenant in ('nav', 'dev-nais')
+SELECT * FROM `nais-io.nais_billing_regional.cost_breakdown_aiven` where tenant in ('nav', 'dev-nais', 'test-nais', 'ci-nais')
