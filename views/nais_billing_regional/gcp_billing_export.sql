@@ -46,4 +46,4 @@ SELECT
   cost,
   credits,
   _PARTITIONDATE AS partition_date
-FROM `finops.billing_export.gcp_billing_export_resource_v1_011591_4BCF08_0F5D9C`
+FROM `novari-finops.billing_export.gcp_billing_export_resource_v1_011591_4BCF08_0F5D9C`
