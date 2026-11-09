@@ -24,7 +24,7 @@ SELECT
 FROM `nais-io.nais_billing_regional.gcp_billing_export_resource_v1_014686_D32BB4_68DF8E`
 UNION ALL
 SELECT
-  'novaris' AS billing_source,
+  'rovari' AS billing_source,
   project.name AS project_name,
   project.id AS project_id,
   (SELECT value from UNNEST(labels) WHERE key='team') AS team_label,
@@ -46,4 +46,4 @@ SELECT
   cost,
   credits,
   _PARTITIONDATE AS partition_date
-FROM `novari-finops.billing_export.gcp_billing_export_resource_v1_011591_4BCF08_0F5D9C`
+FROM `novari-finops.gcp_billing_export.gcp_billing_export_resource_v1_011591_4BCF08_0F5D9C`
