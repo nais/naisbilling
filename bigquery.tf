@@ -100,6 +100,8 @@ resource "google_bigquery_table" "regional_aiven" {
 }
 
 resource "google_bigquery_table" "regional_aiven_nav" {
+  depends_on = [google_bigquery_table.regional_aiven]
+
   dataset_id  = google_bigquery_dataset.nais_billing_regional.dataset_id
   table_id    = "cost_breakdown_aiven_nav"
   description = "Aiven cost extrapolated to daily from monthly cost for nav tenant"
@@ -123,6 +125,8 @@ resource "google_bigquery_table" "aiven_cost_breakdown_daily" {
 
 
 resource "google_bigquery_table" "regional_excluding_nais" {
+  depends_on = [google_bigquery_table.regional_export]
+
   dataset_id  = google_bigquery_dataset.nais_billing_regional.dataset_id
   table_id    = "cost_breakdown_excluding_nais"
   description = "Breakdown of non-gke costs"
@@ -134,6 +138,8 @@ resource "google_bigquery_table" "regional_excluding_nais" {
 }
 
 resource "google_bigquery_table" "regional_nais" {
+  depends_on = [google_bigquery_table.regional_export]
+
   dataset_id  = google_bigquery_dataset.nais_billing_regional.dataset_id
   table_id    = "cost_breakdown_nais"
   description = "Breakdown of costs for all gke clusters"
@@ -145,6 +151,11 @@ resource "google_bigquery_table" "regional_nais" {
 }
 
 resource "google_bigquery_table" "regional_total" {
+  depends_on = [
+    google_bigquery_table.regional_excluding_nais,
+    google_bigquery_table.regional_nais,
+  ]
+
   dataset_id  = google_bigquery_dataset.nais_billing_regional.dataset_id
   table_id    = "cost_breakdown_total"
   description = "Combines all sources of gcp billing"
