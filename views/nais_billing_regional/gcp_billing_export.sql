@@ -36,7 +36,7 @@ SELECT
   (SELECT value from UNNEST(labels) WHERE key='k8s-label/app') AS k8s_app,
   (SELECT value from UNNEST(labels) WHERE key='app') AS app_label,
   (SELECT value from UNNEST(labels) WHERE key='goog-k8s-cluster-name') AS k8s_cluster,
-  NULLIF(TRIM((SELECT value from UNNEST(labels) WHERE key='k8s-label/postgres.nais.io/name')), '') AS postgres_instance,
+  (SELECT value from UNNEST(labels) WHERE key='k8s-label/postgres.nais.io/name') AS postgres_instance,
   service.description AS service_description,
   sku.id AS sku_id,
   sku.description AS sku_description,
