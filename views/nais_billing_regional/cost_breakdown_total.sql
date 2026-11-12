@@ -37,7 +37,7 @@ SELECT
       service_description,
       sku_id,
       sku_description,
-      NULL AS resource_name,
+      resource_name,
       calculated_cost,
       'gke (nais)' AS source,
       'Google Cloud' AS vendor

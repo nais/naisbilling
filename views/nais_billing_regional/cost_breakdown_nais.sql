@@ -45,9 +45,14 @@ SELECT
         ELSE 'Annet'
     END AS cost_category,
     DATE(usage_start_time, 'Europe/Oslo') AS dato,
-    service_description,
+    IF(
+        postgres_instance IS NOT NULL,
+        'CloudNativePG',
+        service_description
+    ) AS service_description,
     sku_id,
     sku_description,
+    postgres_instance AS resource_name,
     (
         SUM(CAST(cost AS NUMERIC)) + SUM(
             IFNULL(
@@ -86,7 +91,12 @@ GROUP BY
     tenant,
     team,
     dato,
-    service_description,
+    IF(
+        postgres_instance IS NOT NULL,
+        'CloudNativePG',
+        service_description
+    ),
+    postgres_instance,
     sku_id,
     sku_description,
     app,
