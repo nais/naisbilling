@@ -10,6 +10,7 @@ SELECT
   (SELECT value from UNNEST(labels) WHERE key='k8s-label/app') AS k8s_app,
   (SELECT value from UNNEST(labels) WHERE key='app') AS app_label,
   (SELECT value from UNNEST(labels) WHERE key='goog-k8s-cluster-name') AS k8s_cluster,
+  (SELECT value from UNNEST(labels) WHERE key='k8s-label/postgres.nais.io/name') AS postgres_instance,
   service.description AS service_description,
   sku.id AS sku_id,
   sku.description AS sku_description,
@@ -24,7 +25,7 @@ SELECT
 FROM `nais-io.nais_billing_regional.gcp_billing_export_resource_v1_014686_D32BB4_68DF8E`
 UNION ALL
 SELECT
-  'rovari' AS billing_source,
+  'novari' AS billing_source,
   project.name AS project_name,
   project.id AS project_id,
   (SELECT value from UNNEST(labels) WHERE key='team') AS team_label,
@@ -35,6 +36,7 @@ SELECT
   (SELECT value from UNNEST(labels) WHERE key='k8s-label/app') AS k8s_app,
   (SELECT value from UNNEST(labels) WHERE key='app') AS app_label,
   (SELECT value from UNNEST(labels) WHERE key='goog-k8s-cluster-name') AS k8s_cluster,
+  (SELECT value from UNNEST(labels) WHERE key='k8s-label/postgres.nais.io/name') AS postgres_instance,
   service.description AS service_description,
   sku.id AS sku_id,
   sku.description AS sku_description,
