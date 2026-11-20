@@ -49,3 +49,29 @@ SELECT
   credits,
   _PARTITIONDATE AS partition_date
 FROM `novari-finops.gcp_billing_export.gcp_billing_export_resource_v1_011591_4BCF08_0F5D9C`
+UNION ALL
+SELECT
+  'ks-digital' AS billing_source,
+  project.name AS project_name,
+  project.id AS project_id,
+  (SELECT value from UNNEST(labels) WHERE key='team') AS team_label,
+  (SELECT value from UNNEST(project.labels) WHERE key='team') AS team,
+  (SELECT value from UNNEST(project.labels) WHERE key='environment') AS env,
+  (SELECT value from UNNEST(project.labels) WHERE key='tenant') AS tenant,
+  (SELECT value from UNNEST(labels) WHERE key='k8s-namespace') AS k8s_namespace,
+  (SELECT value from UNNEST(labels) WHERE key='k8s-label/app') AS k8s_app,
+  (SELECT value from UNNEST(labels) WHERE key='app') AS app_label,
+  (SELECT value from UNNEST(labels) WHERE key='goog-k8s-cluster-name') AS k8s_cluster,
+  (SELECT value from UNNEST(labels) WHERE key='k8s-label/postgres.nais.io/name') AS postgres_instance,
+  service.description AS service_description,
+  sku.id AS sku_id,
+  sku.description AS sku_description,
+  resource.global_name AS resource_name,
+  usage_start_time,
+  usage_end_time,
+  usage.amount AS usage_amount,
+  usage.unit AS usage_unit,
+  cost,
+  credits,
+  _PARTITIONDATE AS partition_date
+FROM `ks-billing-export-515112.detailed_usage_cost_export.gcp_billing_export_resource_v1_01D9AE_DE827D_B8AACB`
