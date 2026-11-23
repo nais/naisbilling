@@ -3,6 +3,23 @@ Terraform for billing i BigQuery
 
 I [views](views) er det en mappe per BigQuery dataset. Hver mappe inneholder SQL-filer som lager views i datasettet.
 
+## Slik flyter kostnadsdataene (hvem leser hva)
+
+```text
+GCP detaljert billing-eksport (Nais-io, Novari, KS Digital)
+  → view `nais_billing_regional.gcp_billing_export` (UNION ALL av eksportene)
+  → views `cost_breakdown_excluding_nais` / `cost_breakdown_nais`
+  → scheduled query "every day 05:30" (SA: nais-io-bigquery-schedule-user)
+      → tabell `nais_billing_regional.cost_breakdown_total_daily_update`
+        (rullerende 10-dagers patch; full rebuild den 1. i måneden)
+  → view `console.source_cost` (nais-io-terraform-modules, modules/base/console.tf)
+  → view `console.cost_<tenant>` (nais-terraform-modules, modules/management/bigquery_views)
+      – omdøper env, ekskluderer 'Support', deler ut CloudNativePG, `dato <= CURRENT_DATE - 2`
+  → nais/api (`internal/cost/costupdater`): syncer siste 5 dager til Postgres hver time,
+      serverer GraphQL (`team.cost.daily`, `costMonthlySummary`, …)
+  → console-frontend viser dataene (alle spørringer bruker `to = i dag - 2`)
+```
+
 ## legacy_billing
 
 Disse viewene er ikke direkte i bruk, men ble brukt for å lage tabellen `cost_breakdown_total_gcp_static` som er grunnlaget for historisk data fra gcp (fram til 2023-03-07). Tilsvarer https://github.com/nais/navbilling/tree/main/views.
